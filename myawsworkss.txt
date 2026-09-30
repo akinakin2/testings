@@ -1,0 +1,93 @@
+To install the AWS CLI on CentOS 10, (ask Google) follow these steps:
+
+•	Update the System
+Ensure your system is up to date:
+sudo dnf update
+ 
+•	Install Required Packages
+Install the necessary packages:
+		sudo dnf install unzip curl
+ 
+•	Download the AWS CLI
+Use the following command to download the AWS CLI installation script:
+$ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+
+•	Unzip the Installer
+Unzip the downloaded file:
+	$ unzip awscliv2.zip
+ 
+•	Run the Installer
+Execute the installation script:
+	$ sudo ./aws/install
+
+
+Debian System WSL CLI
+Set up AWS CLI in WSL
+
+Update WSL packages:	sudo apt update
+			sudo apt install -y unzip curl
+
+Install AWS CLI v2::
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+ 
+•	Verify the Installation
+Check if the AWS CLI is installed correctly:
+	$ aws --version
+
+Configure credentials:	
+	$ aws configure
+
+AWS
+Login to AWS website
+Menu (top-right corner) – Security Credentials – create Access key
+(this will give you Access key:
+Secrete Access key:
+
+$ aws configure
+
+AWS Access Key ID [None]:
+AWS Secret Access Key [None]:
+Default region name [None]: us-east-1
+Default output format [None]: json
+
+TEST your Setup
+	$aws sts get-caller-identity
+
+•	Configure AWS CLI
+
+https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html
+
+Get Started, --- Install and update ---
+
+##You need a key pair to be able to SSH into EC2 instance, do it when creating instance
+
+You must have a SUBNET in VPC, so create both public and private subnet always together.
+
+Subnet IP address must always be within the VPC IP range
+
+Gateway connect your VPC to outside/another network
+
+Every VPC have a default Route Table which makes instances in the same VPC to communicate.
+
+Create diff Route Table for both public and private subnet
+
+Associate Subnet to Route Table.  ----  Go to RouteTable to do it
+
+NAT Gateway
+Nat Gateway – Create Gateway connect to public subnet, select Elastic IP.
+
+Network Access Control list, it is stateless, it DOES NOT REMEMBER what goes in or out of instance,
+so you must set the rule for what goes in and rules for what comes out.
+--- it’s like a firewall to protect the subnet
+
+Security group is STATEFULL, it remembers what goes in and what comes out of instance,
+it only require one way rule set.
+
+Set up your AWS credentials:
+$ aws configure
+
+How to confirm your credential
+Go to home of user – cd .aws – cat credentials - this should show you the imputed credential.
+This authenticate my CLI with AWS.
