@@ -1,0 +1,23 @@
+This is the command line color command
+
+## On CentOS 10, enable colored terminal output with:
+
+
+$ echo "alias ls='ls --color=auto'" >> ~/.bashrc
+echo "alias grep='grep --color=auto'" >> ~/.bashrc
+source ~/.bashrc
+
+## For common command output, use:
+
+$ command | less -R
+
+## For persistent colored prompts, add this to ~/.bashrc:
+
+$ PS1='\[\e[32m\]\u@\h \[\e[34m\]\w\[\e[0m\]\$ '
+
+## Then reload:
+
+$ source ~/.bashrc
+
+
+
