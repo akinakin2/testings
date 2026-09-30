@@ -1,0 +1,302 @@
+It's an open source container ORCHESTRATION TOOL
+
+It help to manage containers (DOCKER CONTAINERS)
+
+It helps to manage hundreds of containers used by an application in DIFFERENT DEPLOYMENT ENVIRONMENT
+
+Container holds small INDEPENDENT apps for Micro-services
+
+Kubernetes offer ORCHESTRATION TOOL that provide
+High AVAILABILITY OR NO DOWN TIME
+HIGH PERFORMANCE OR SCALABILITY, increases availability
+It helps in DISASTER RECOVERY
+
+
+ARCHITECTURE:
+
+At least ONE MASTER NODE = VIRTUAL OR PHYSICAL MACHINE connected to multiple WORKER NODES
+
+Worker Nodes = Nodes = has KUBELETS running on it
+
+KUBELET = PRIMARY "NODE AGENTS" HELPS CLUSTER to communicate with each other
+
+Each Worker Nodes - Node has application deployed on it
+
+API SERVER is on the MASTER container = it is a container that help Master to communicate with other worker-node
+
+
+User-Interface {UI}, API and or CLI communicate with withe API server/container
+
+API SERVER = Entry point to K8s cluster
+
+Control Manager = keeps track of what happening in the cluster
+
+SCHEDULER = Ensures Pods replacement
+
+ETCL = KUBERNETES BACKING STORE. IT HAS ALL THE CONFIG of all the NODES, YOU RECOVER USING THE SNAPSHOP of ETCD on master
+
+virtual Network helps the clusters to communicate
+Master with Node and vice versa
+It helps to CREATES ONE UNIFIED MACHINE
+
+Worker Node are higher workload, and her more resourceful
+
+KUBERNETES COMPONENTS ARE:
+POD,
+CONFIGMAP,
+SERVICE,
+SECRET,
+INGRESS,
+DEPLOYMENT,
+STATEFUL AND
+DAEMONSET
+
+
+PODS = Smallest unit in K$b
+Abstraction over container
+usually one application per pod
+each POD get its own virtual IP address
+
+Complications: after a POD dies, a new IP address is attached to the container
+
+SERVICE is introduced to solve this complications. It has a static IP address. and the Lifecycle of POD and SERVICE are not connected BUT PODS USES SERVICES TO COMMUNICATE
+
+External service [People wants to access the application] fixing IP with Port number is not acceptable
+
+INGRESS - resolve the Ip and port to a beautiful web name like www.google.com etc
+
+CONFIGMAP:	Assume my-app need to pull from a database [s3, Mango-db], Database url is usually in the built application:
+RE-BUILD > PUSH IT TO REPO > PULL IT IN THE POD
+
+ConfigMap is a configuration file that is connected to POD and has your database url.
+if you change the database URL or username or password, NO NEED TO REBUILD THE POD ONLY adjust the ConfigMap with the new URL.
+
+ConfigMap is for non confidential data only and its to be kept secretly.
+
+SECRETE is like a ConfigMap but its used to store secrete data CREDENTIALS bot stored in a 36 bit test format
+it is referenced in Deployment /Pod
+
+VOLUMES - Data storage, if Pod is restarted, the data will be gone, Volume is either attached to local machine at a remote, outside of the k8s cluster to safe guide the database after restart or shutdown
+
+NOTE: K8 does not manage data persistence, I MUST DO THAT
+
+DISTRIBUTED SYSTEM / REPLICATION OF ALL NODE INCLUDING MASTER which is also connected to the service
+> Permanent IP
+> Service is also a load balancer
+
+In order to create second application, you will not create POD but create a blueprint for PODS which dictates how many duplicate you want.
+
+The blueprint is called DEPLOYMENTS
+Usually you work with deployment and not with the pods
+
+STATEFULSET - This is useful for applications like databases, because one can not duplicate the database but its a stateful Set
+This helps in scaling up or down the Nodes and makes the system consistency.
+
+Deployment = for stateless Apps Statefulset
+StatefulSet = for stateful apps or Database
+
+DBs are often hosted outside of K8 cluster
+
+SUMMARY
+PODS 	== 	Abstract container
+SERVICES == 	communication,
+INGRESS == 	Route traffic into the cluster
+CONFIGMAP, SECRET = External configuration
+VOLUME == Data persistent
+DEPLOYMENT & STATEFULSET == Replication
+
+How do we create the resource??
+how do you CONFIGURE THE K8S CLUSTER
+
+All config in k8 cluster goes tru a master node called API SERVER. FORMAT IS YMEN or Json.
+> its Declarative
+> is == should
+
+Controller Manager: desired state == actual state
+
+EACH CONFIG FILE HAS 3 PARTS
+
+1. METEDATA
+
+2. SPECIFICATION
+
+3. STATUS: == Automatically and add by Kubernetes
+K8 will compare the desire and the Actual, if there's error:
+k8 provides fixes errors when desired is not the same as actual, this is called healing itself.
+
+ETCD hold at any giving point in time the current status of any k8 components
+
+Master Nodes [Control Plane]
+Worker Nodes [Nodes] have their own separate responsibility.
+
+MINIKUBE: [ONE NODE] Master and Node processes run on ONE MACHINE, Docker container PRE-INSTALLED
+
+kubectl : Its the command line tool for k8s cluster, its used to communicate with API Server
+
+BLUEPRINT is same as template
+
+INSTALL MINIKUBE
+https://minikube.sigs.k8s.io/docs/start/?arch=%2Flinux%2Fx86-64%2Fstable%2Frpm+package
+
+What you’ll need
+2 CPUs or more
+2GB of free memory
+20GB of free disk space
+Internet connection
+Container or virtual machine manager, such as: Docker, QEMU, Hyperkit,
+Hyper-V, KVM, Parallels, Podman, VirtualBox, or VMware Fusion/Workstation
+
+Install Docker first where you want to install your minikube.
+
+
+
+Install as a USER not ROOT
+
+Docker is pre-installed with the minikube.
+
+Minikube CLI ..... for start up / deleting cluster
+Kubectl CLI ...... for configuring the Minikube cluster
+
+$ minikube start --driver=docker
+$ minikube start
+$ minikube status
+$ kubectl get node
+
+## DB-ConfigMap.yaml
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: DB-config  "this will be the service name of DB"
+data:
+  DB-url: DB-service  "which will be the endpoint of DB that point to service.yaml"
+
+DB-url is what that will be the answer to key on web-app config
+
+## DB-secret.yaml
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-secret	(editable to desired)
+type: Opaque
+data:
+  username: dXNlcm5hbWU	(the word username could be DB_USERNAME, APP_USERNAME etc remember this when working on deployment.yaml)
+  password: cGFzc3dvcmQ (the word password could be DB-PASSWORD, PASSWD, etc, remember this when working on deployment and service for both internal and external)
+	## NOTE: To convert plain text to encoded format:
+		$ echo -n plain-text | base64
+
+## CREATE SECRET or CONFIGMAP JUST ONCE AND CAN BE REFERENCE AS OFTEN AS YOU NEED ON PODs
+
+(DEPLOYMENT AND SERVICE WITH INTERNAL SERVICE)
+## Deployment.yaml
+
+apiVersion: apps/v1
+kind: Deployment	(deployment has its metadata and spec section)
+metadata:
+  name: my-app	(editable)
+  labels:
+    app: my-app (editable)
+spec:		(deployment specific specification)
+  replicas: 3	(how many pod you want to create using template/blueprints section)
+  selector:	(this help k8 to know which pod goes to where)
+    matchLabels:
+      app: my-app
+  template:	(Blueprint for pods/config for pod)
+    metadata:	(has its own 'metadata' n "spec" section)
+      labels:
+        app: my-app
+    spec:	(inside template spec is where we have container config)
+      containers:
+      - name: my-app	(editable / name of container)
+        image: nginx:latest (editable based on where your image is located, either on/off line: its tag/version)
+        ports:
+        - containerPort: 2710	(editable)
+
+        env:	(Remember the info on deployment and service)
+        - name: USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: my-secret	(name of secret.yaml file created)
+              key: username
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: my-secret	(name of secret.yaml file created)
+              key: password
+----
+## service.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-app-service
+spec:
+  selector:
+    app: my-app (editable and must align with deployment selector label)
+  ports:
+  - protocol: TCP
+    port: 2710	   (editable to any desired but best practice is to set to container port)
+    targetPort: 2710 (editable, must be the same with the port of the container)
+  type: LoadBalancer	(for multiple replicas)
+
+
+(DEPLOYMENT SERVICE WITH EXTERNAL SERVICE)
+## WEB APP
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app-deployment (editable)
+  labels:
+    app: web-app	(editable)
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-app	(editable)
+  template:
+    metadata:
+      labels:
+        app: web-app	(editable)
+    spec:
+      containers:
+      - name: web-app	(editable)
+        image: nginx:latest	(editable, use correct image of the web image you want to use, image path, with tag)
+        ports:
+        - containerPort: 3000	(editable, must be the same with the service.yaml targetPort)
+        env:
+        - name: USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: username	(editable to refence what you used in the secret.yaml, e.g. DB-username, APP_USERNAME etc)
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: password	(editable to refence what you used in the secret.yaml, e.g. password, DB-Password, APP_Password etc)
+
+        - name: DB_URL	(editable to desired, REFERENCING CONFIGMAP)
+          valueFrom:
+            configMaKeyRef:
+              name: DB-config	(name supplied in configMap.yaml file)
+              key: DB-url	(name supplied in configMap.yaml file)
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-app-service	(editable)
+spec:
+  Type: NodePort	(external access / web site access)
+  selector:
+    app: web-app	(editable)
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: 3000	(editable, must be the same with the deployment container port)
+    nodePort: 8080	(this is the port at which it will be assessed from web-site e.g. https:site/IP:8080)
+  type: LoadBalancer
+
+## NodePort Service is accessible on each worker Node's IP address
