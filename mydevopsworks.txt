@@ -1,0 +1,64 @@
+COMMAND TO REMEMBER ALL TIME
+
+1. uname = check OS
+2. pwd	==	where am I
+3. cd	==	change directory
+4. ls	==	list content of directory
+5. ls -l ==	show details like, permission, owner, size and modification date
+6. cat	==	print content of file
+
+7. | = Pipe ==	used to filter, it is used to pass the output of one command as input to another, it also allows you to chain multiple commands together
+
+8. grep is to filter a word or "phrase" while using | (pipe)
+Example: cat error.log | grep database.	this ONLY show lines that has database
+
+9. >= Redirection, Redirect the output of a command to a (NEW)file.
+Example: cat error.log | grep database > NEW-FILE
+
+10. cp	==	copy a file to thesame or a diff location
+Example: $ cp error.log /root/error.log.backup
+
+11. wc	==	word count 
+		-l count lines
+		-w count words
+		-c count bytes
+		-m count character (useful for UTF-8)
+		-L find the longest line length
+Example cat error.log | grep database | grep "a phrase" | grep wc -l
+
+12. find ==	this is used to find a file. either full name or half/part name. Example $ find location -name "*.conf"
+	      $  $ find location -name "*.conf*"
+
+13. diff ==	its used to find the difference in the content of two files
+Example: $ find file-1 file-2
+
+14. curl ==	Client URL, Used to transfer data from OR to a server using various protocols like HTTP, FTP etc. It is commonly used for interaction with APIs and debugging NETWORK requests.
+Example: $ curl -I http://localhost:port-number
+
+15 file permissions, CHMOD, USERMOD, etc
+##  - rwx  rwx  rwx (file-type user group others)
+## file-type: (- = regular file, d=Directory, L=Symbol Link)
+## r=4, w=2 x=1	total=7
+## chmod 777 == Open to all
+## chmod 444 == Read only for all etc.
+
+https://learn.microsoft.com/en-us/windows/wsl/install
+
+Oracle Linux 9.5 has been downloaded.                       
+Distribution successfully installed. It can be launched via 'wsl.exe -d Oracle Linux 9.5'
+
+$ wsl --install
+
+The above command only works if WSL is not installed at all.
+If you run wsl --install and see the WSL help text,
+please try running wsl --list --online to see a list of available distros and
+run wsl --install -d <DistroName> to install a distro.
+If the install process hangs at 0.0%, 
+run wsl --install --web-download -d <DistroName> to first download the distribution prior to installing.
+To uninstall WSL, see Uninstall legacy version of WSL or unregister or uninstall a Linux distribution.
+
+wsl.exe --install -d [Distro]
+
+wsl.exe --list --online
+
+wsl.exe --list --verbose
