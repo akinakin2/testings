@@ -1,0 +1,182 @@
+GitHub will make you create an account if you don't have or sign in into your online GitHub account
+Get familiar with the GitHub desktop version because there are things in there
+
+> git config --global user.name "Your anme"
+> git config --global user.email "email@address.com"
+> git config --global init.default branch main
+
+Go to desired directory for your main/master repo and type
+> git init [.git directory will be created and you have all you need for your repo]
+> git status [this will show you files that are TRACK $ NOT tracking]
+> git add "file-name you want to track" press ENTER
+> git status "selected file color have changed from RED to GREEN" it's tracking the file now 
+
+
+> use "git rm --cached <file-name>" to unstages 0r UNTRACK
+
+
+COMMAND & USAGE
+git init "dot and enter means your storage is at the directory you are"
+git commit -m "comment about what you do"
+git add <file>... "to update what will be committed"
+
+
+git diff "shows the diff in Working Directory / Staging Area (Index) vs last commit"
+git diff --staged (or --cached)	"Staging Area [tracked] vs. Last Commit (HEAD)"
+git diff HEAD		Working Directory vs. Last Commit
+
+
+git restore <file>... "to discard changes in working directory"
+git mv "old file-name" "new file-name" [this is to rename a file using git]
+
+
+git log [this shows the commits you have made over time]
+git log --oneline	[only shows the ash number of all commits]
+
+
+If your commit comment is wrong or you want to make better statement
+in your most previous commit statement, you could do this:
+
+$ git commit -m "corrected message on the most previously commit" --amend
+
+	## To check the latest commit statement in the pwd
+$ git log -1 --oneline
+
+	## For the full commit message, run 
+$ git show -s --format=%B HEAD.
+
+	## show latest commit info in the PWD
+$ git show -s
+
+If you want to reset to previous, irrespective of when or where,
+you could use ASH number from log.	
+	$ log reset Ash number of commit
+
+
+Git rebase -i --root	Helps to rearrange your Ash number or any other things in the editor
+
+
+BRANCH
+git checkout -b <branch-name> 
+git switch -c <branch-name>	Creates new branch and immediately switches your workspace to it.
+
+DELETE BRANCH
+
+git branch:	Shows all local branches; the active branch is marked with an asterisk (*).
+git branch -a			Shows both local and remote-tracking branches.
+git branch -r			Displays only the branches tracked on your remote repository.
+git branch <branch-name>	Creates a new branch pointer at your current commit without switching to it.
+git branch -m <old-name> <new-name>	Renames an existing branch locally.
+git branch -d <branch-name>	Deletes a local branch only if it has already been fully merged upstream.
+git branch -D <branch-name>	Forcefully deletes a local branch, ignoring its merge status (destructive).
+
+
+Want to add a PERTICULAR file to a PARTICULAR BRANCH
+$ git checkout branch
+$ git add file-name 
+
+OR
+
+Want to commit a PARTICULAR file to a PARTICULAR branch
+$ git checkout branch
+$ git commit -m "comments" file-name
+$ git log --oneline HEAD..branch-name	(to check if there's commits missing before deleting branch)
+
+
+	You are merging into the present working branch/master
+> git merge -m "merging DevOps to master for more info" DevOps [branch]
+
+> git remote -v	 {Check the current remote repo, it will provide info if you have}
+> git remote remove origin	Remove/disconnect the remote repo
+
+
+If you have a local clone, you can update it by running the following commands.
+
+The default branch has been renamed!
+main is now named test-branch
+
+If you have a local clone, you can update it by running the following commands.
+
+git branch -m main test-branch
+git fetch origin
+git branch -u origin/test-branch test-branch
+git remote set-head origin -a
+
+
+If you create a repo on GitHub without Readme file, repo is EMPTY
+you can do:
+… create a new repository on the command line
+echo "# repo-name" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/user-name/repo-name.git
+git push -u origin main
+
+
+OR
+
+…or push an existing repository from the command line
+git remote add origin https://github.com/user-name/repo-name.git
+git branch -M (GitHub-branch-name)
+git push -u origin <branch-name>
+
+
+First Push to the origin/(branch-name) will require global identity
+git config --global user.name "YOUR NAME"
+git config --global user.email "YOUR EMAIL ADDRESS"
+
+
+When you commit to mail you will be required to authenticate
+GitHub username
+GitHub password: this password is the personal access token
+you will find at:
+
+
+	Go to GitHub and open Settings.
+	Select Developer settings.
+	Select Personal access tokens → Fine-grained tokens. [Classic]
+	Click Generate new token.
+	
+
+
+	Set an expiration and grant access to the required repository.
+
+	Under Repository permissions, grant Contents: Read and write.
+
+	Generate and copy the token immediately. 
+
+
+If you just made a commit and want to undo the commit but keep all changes staged:
+	$ git reset --soft HEAD~1
+
+
+	If you want to undo the commit and keep the changes, but unstaged:
+$ git reset HEAD~1
+
+
+	If you want to undo the commit and throw away all its changes:
+$ git reset --hard HEAD~1
+
+	To remove a deleted file from git
+$ git commit -m "Remove deleted work files"
+
+If you've already pushed the commit, usually don't reset shared history. Instead:
+	$ git revert HEAD
+	$ git push
+
+##
+Rule of thumb: not pushed → git reset; already pushed/shared → git revert.
+
+## List file(s) in present-working-branch 
+	$ git ls-files
+
+
+
+API-BASIC COMMAND
+post
+get
+put
+delete
+update
