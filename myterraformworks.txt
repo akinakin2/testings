@@ -56,3 +56,5 @@ $ terraform --version
 Whenever you create a new configuration on terraform, you must initialize it by using:
  $ terraform init	in the Terraform directly
 
+8. grep is to filter a word or "phrase" while using | (pipe)
+Example: cat error.log | grep database.	this ONLY show lines that has database
